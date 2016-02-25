@@ -27,6 +27,7 @@ public class Account {
      * Returns the current total balance of the account
      * @return - the balance
      */
+    private double bal;
     public double getBalance() {
         return -999;
     }
@@ -36,7 +37,7 @@ public class Account {
      * @param cash - the cash to deposit
      */
     public void deposit(double cash) {
-        
+        bal += cash;
     }
     
     /**
@@ -44,13 +45,13 @@ public class Account {
      * @param cash - the cash to withdraw
      */
     public void withdraw(double cash) {
-    
+    bal-=cash;
     }
     
     /**
      * Deducts all cash from the total balance of the account
      */
     public void close() {
-        
+        bal=0.0;
     }
 }

@@ -29,7 +29,7 @@ public class Account {
      */
     private double bal;
     public double getBalance() {
-        return -999;
+        return bal;
     }
     
     /**

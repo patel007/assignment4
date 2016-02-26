@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package servlet;
 
-import static com.sun.jmx.snmp.ThreadContext.contains;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,42 +35,41 @@ public class AccountServlet extends HttpServlet {
 
     private Account account;
 
-    
-    
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException  {
+    public AccountServlet() {
+        this.account = new Account();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
-        double bal = account.getBalance();
-        PrintWriter out = response.getWriter();                
-        out.println(bal);
+        double balance = account.getBalance();
+        PrintWriter out = response.getWriter();
+            out.println(balance);
+
     }
-                                
-    /**
-     *
-     * @param request
-     */
-    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException  
-    {        
-            if (contains("withdraw") && request.getParameter("withdraw") != null) {
-                account.withdraw(Double.parseDouble(request.getParameter("withdraw")));
-            } else if (contains("deposit") && request.getParameter("deposit") != null) {
-                account.deposit(Double.parseDouble(request.getParameter("deposit")));
-            } else if (contains("close") && "true".equals(request.getParameter("close"))) {
-                account.close();
-            } else {
-                out.println("Error: No parameters to process POST request");
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String withdraw= request.getParameter("withdraw");
+        String deposit= request.getParameter("deposit");
+        String close= request.getParameter("close");
+        try (PrintWriter out = response.getWriter()) {          
+            
+            
+            if(withdraw != null){
+            account.withdraw(Double.parseDouble(withdraw));
             }
-        try {
-            doGet(request, (HttpServletResponse) response);
+            
+            else if(deposit != null){
+                account.deposit(Double.parseDouble(deposit));
+            }
+            else if(close != null && "true".equals(close)){
+            account.close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(AccountServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception e){
-            e.getMessage();
-        }
-               
-         
     }
 }
